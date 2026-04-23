@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+    <extension_attributes for="Magento\Quote\Api\Data\CartInterface">
+        <attribute code="einv_financing_profile" type="string"/>
+        <attribute code="einv_verification_status" type="string"/>
+        <attribute code="einv_company_id" type="int"/>
+        <attribute code="einv_tax_registration_status" type="string"/>
+        <attribute code="einv_invoice_recipient_firstname" type="string"/>
+        <attribute code="einv_invoice_recipient_lastname" type="string"/>
+        <attribute code="einv_invoice_email" type="string"/>
+        <attribute code="einv_po_number" type="string"/>
+        <attribute code="einv_routing_address" type="string"/>
+    </extension_attributes>
+    <extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
+        <attribute code="einv_financing_profile" type="string"/>
+        <attribute code="einv_verification_status" type="string"/>
+        <attribute code="einv_company_id" type="int"/>
+        <attribute code="einv_order_snapshot" type="Inseead\Einvoicing\Api\Data\OrderSnapshotInterface"/>
+    </extension_attributes>
+    <extension_attributes for="Magento\Sales\Api\Data\InvoiceInterface">
+        <attribute code="einv_invoice_snapshot" type="Inseead\Einvoicing\Api\Data\InvoiceSnapshotInterface"/>
+    </extension_attributes>
+    <extension_attributes for="Magento\Customer\Api\Data\CustomerInterface">
+        <attribute code="einv_company_id" type="int"/>
+    </extension_attributes>
+</config>

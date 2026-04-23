@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Inseead_Einvoicing::main" title="Inseead Einvoicing" module="Inseead_Einvoicing"
+             sortOrder="100" resource="Inseead_Einvoicing::main" parent="Magento_Backend::stores"/>
+        <add id="Inseead_Einvoicing::company" title="Companies" module="Inseead_Einvoicing"
+             sortOrder="10" parent="Inseead_Einvoicing::main"
+             action="einvoicing/company/index" resource="Inseead_Einvoicing::company"/>
+        <add id="Inseead_Einvoicing::config" title="Configuration" module="Inseead_Einvoicing"
+             sortOrder="20" parent="Inseead_Einvoicing::main"
+             action="adminhtml/system_config/edit/section/einvoicing" resource="Inseead_Einvoicing::config"/>
+    </menu>
+</config>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">einvoicing_company_form.einvoicing_company_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Company Information</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back"   class="Inseead\Einvoicing\Block\Adminhtml\Company\Edit\BackButton"/>
+            <button name="delete" class="Inseead\Einvoicing\Block\Adminhtml\Company\Edit\DeleteButton"/>
+            <button name="save"   class="Inseead\Einvoicing\Block\Adminhtml\Company\Edit\SaveButton"/>
+        </buttons>
+        <namespace>einvoicing_company_form</namespace>
+        <dataScope>data</dataScope>
+        <deps><dep>einvoicing_company_form.einvoicing_company_form_data_source</dep></deps>
+    </settings>
+    <dataSource name="einvoicing_company_form_data_source">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <validateUrl path="einvoicing/company/validate"/>
+            <submitUrl path="einvoicing/company/save"/>
+        </settings>
+        <aclResource>Inseead_Einvoicing::company</aclResource>
+        <dataProvider class="Inseead\Einvoicing\Model\Company\DataProvider" name="einvoicing_company_form_data_source">
+            <settings><requestFieldName>id</requestFieldName><primaryFieldName>company_id</primaryFieldName></settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general" sortOrder="10">
+        <settings><label translate="true">Company Details</label></settings>
+        <field name="company_id" formElement="input"><settings><dataType>text</dataType><visible>false</visible></settings></field>
+        <field name="company_name" formElement="input" sortOrder="10"><settings><dataType>text</dataType><label translate="true">Company Full Legal Name</label><validation><rule name="required-entry" xsi:type="boolean">true</rule></validation></settings></field>
+        <field name="commercial_name" formElement="input" sortOrder="20"><settings><dataType>text</dataType><label translate="true">Commercial Name</label></settings></field>
+        <field name="country" formElement="input" sortOrder="30"><settings><dataType>text</dataType><label translate="true">Country (ISO2)</label><validation><rule name="required-entry" xsi:type="boolean">true</rule></validation></settings></field>
+        <field name="verification_status" formElement="select" sortOrder="40">
+            <settings><dataType>text</dataType><label translate="true">Verification Status</label></settings>
+            <formElements><select><settings><options class="Inseead\Einvoicing\Ui\Component\Listing\Column\VerificationStatus"/></settings></select></formElements>
+        </field>
+        <field name="verified_at" formElement="input" sortOrder="50"><settings><dataType>text</dataType><label translate="true">Verified At</label><disabled>true</disabled></settings></field>
+    </fieldset>
+    <fieldset name="tax_info" sortOrder="20">
+        <settings><label translate="true">Tax &amp; Registration</label></settings>
+        <field name="vat_number"   formElement="input" sortOrder="10"><settings><dataType>text</dataType><label translate="true">VAT Intracommunity Number</label></settings></field>
+        <field name="siren"        formElement="input" sortOrder="20"><settings><dataType>text</dataType><label translate="true">SIREN (France)</label></settings></field>
+        <field name="siret"        formElement="input" sortOrder="30"><settings><dataType>text</dataType><label translate="true">SIRET (France)</label></settings></field>
+        <field name="apen_number"  formElement="input" sortOrder="40"><settings><dataType>text</dataType><label translate="true">APEN / NAF Code</label></settings></field>
+        <field name="certificate_id" formElement="input" sortOrder="50"><settings><dataType>text</dataType><label translate="true">Certificate ID</label></settings></field>
+        <field name="duns_number"  formElement="input" sortOrder="60"><settings><dataType>text</dataType><label translate="true">D-U-N-S Number</label></settings></field>
+    </fieldset>
+</form>

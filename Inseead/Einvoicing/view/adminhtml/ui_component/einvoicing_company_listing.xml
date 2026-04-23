@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">einvoicing_company_listing.einvoicing_company_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="add"><url path="*/*/new"/><class>primary</class><label translate="true">Add New Company</label></button>
+        </buttons>
+        <spinner>einvoicing_company_columns</spinner>
+        <deps><dep>einvoicing_company_listing.einvoicing_company_listing_data_source</dep></deps>
+    </settings>
+    <dataSource name="einvoicing_company_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig><param name="indexField" xsi:type="string">company_id</param></storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Inseead_Einvoicing::company</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="einvoicing_company_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>company_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings><sticky>true</sticky></settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <massaction name="listing_massaction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Delete selected companies?</message>
+                        <title translate="true">Delete Companies</title>
+                    </confirm>
+                    <url path="einvoicing/company/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="einvoicing_company_columns">
+        <selectionsColumn name="ids"><settings><indexField>company_id</indexField></settings></selectionsColumn>
+        <column name="company_id"><settings><filter>textRange</filter><label translate="true">ID</label><sorting>asc</sorting></settings></column>
+        <column name="company_name"><settings><filter>text</filter><label translate="true">Company Name</label></settings></column>
+        <column name="vat_number"><settings><filter>text</filter><label translate="true">VAT Number</label></settings></column>
+        <column name="siret"><settings><filter>text</filter><label translate="true">SIRET</label></settings></column>
+        <column name="country"><settings><filter>text</filter><label translate="true">Country</label></settings></column>
+        <column name="verification_status">
+            <settings>
+                <filter>select</filter>
+                <options class="Inseead\Einvoicing\Ui\Component\Listing\Column\VerificationStatus"/>
+                <label translate="true">Verification Status</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings><filter>dateRange</filter><dataType>date</dataType><label translate="true">Created At</label></settings>
+        </column>
+        <actionsColumn name="actions" class="Inseead\Einvoicing\Ui\Component\Listing\Column\CompanyActions">
+            <settings><indexField>company_id</indexField></settings>
+        </actionsColumn>
+    </columns>
+</listing>

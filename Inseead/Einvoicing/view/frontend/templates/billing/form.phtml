@@ -1,0 +1,196 @@
+<?php
+/** @var \Inseead\Einvoicing\Block\Billing\Form $block */
+?>
+<div class="einvoicing-billing-wrapper">
+<form id="einvoicing-billing-form" method="post" novalidate>
+<?= $block->getBlockHtml('formkey') ?>
+
+<!-- HEADER ROW -->
+<div class="einvoicing-header-row">
+    <div class="field einvoicing-field">
+        <label class="label" for="financing_profile"><?= $block->escapeHtml(__('Financing Profile')) ?></label>
+        <div class="control">
+            <select id="financing_profile" name="financing_profile" class="select">
+                <option value="self_funded" <?= $block->getCurrentFinancingProfile()==='self_funded'?'selected':'' ?>><?= $block->escapeHtml(__('Self-funded')) ?></option>
+                <option value="sponsored"   <?= $block->getCurrentFinancingProfile()==='sponsored'?'selected':'' ?>><?= $block->escapeHtml(__('Sponsored by Organization')) ?></option>
+            </select>
+        </div>
+    </div>
+    <div class="field einvoicing-field required">
+        <label class="label" for="country_of_residence"><span><?= $block->escapeHtml(__('Country of Residence')) ?></span></label>
+        <div class="control">
+            <select id="country_of_residence" name="country_of_residence" class="select" required>
+                <?php foreach ($block->getCountryOptions() as $opt): ?>
+                <option value="<?= $block->escapeHtmlAttr($opt['value']) ?>" <?= $block->getCurrentCountry()===$opt['value']?'selected':'' ?>><?= $block->escapeHtml($opt['label']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="field einvoicing-field b2b-only" id="field-tax-status" style="display:none">
+        <label class="label" for="tax_registration_status"><?= $block->escapeHtml(__('Tax Registration Status')) ?></label>
+        <div class="control">
+            <select id="tax_registration_status" name="tax_registration_status" class="select">
+                <?php foreach ($block->getTaxRegistrationStatusOptions() as $opt): ?>
+                <option value="<?= $block->escapeHtmlAttr($opt['value']) ?>" <?= $block->getQuoteField('tax_registration_status')===$opt['value']?'selected':'' ?>><?= $block->escapeHtml($opt['label']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- B2C SECTION -->
+<div id="b2c-section" class="einvoicing-section">
+    <h2 class="einvoicing-section-title"><?= $block->escapeHtml(__('Enter Billing Information')) ?></h2>
+    <div class="field required">
+        <label class="label" for="sector_b2c"><span><?= $block->escapeHtml(__('Sector of Activity')) ?></span></label>
+        <div class="control">
+            <select id="sector_b2c" name="sector_of_activity" class="select b2c-field" required>
+                <?php foreach ($block->getSectorOptions() as $opt): ?><option value="<?= $block->escapeHtmlAttr($opt['value']) ?>"><?= $block->escapeHtml($opt['label']) ?></option><?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+    <div class="field required"><label class="label" for="street"><span><?= $block->escapeHtml(__('Street')) ?></span></label><div class="control"><input type="text" id="street" name="street" class="input-text b2c-field" required/></div></div>
+    <div class="field"><label class="label" for="street2"><?= $block->escapeHtml(__('Street 2')) ?></label><div class="control"><input type="text" id="street2" name="street2" class="input-text b2c-field"/></div></div>
+    <div class="field required"><label class="label" for="city"><span><?= $block->escapeHtml(__('City')) ?></span></label><div class="control"><input type="text" id="city" name="city" class="input-text b2c-field" required/></div></div>
+    <div class="fields group group-2">
+        <div class="field"><label class="label" for="state"><?= $block->escapeHtml(__('State')) ?></label><div class="control"><select id="state" name="state" class="select b2c-field"><option value=""><?= $block->escapeHtml(__('Select an Option')) ?></option></select></div></div>
+        <div class="field"><label class="label" for="postcode"><?= $block->escapeHtml(__('Zip/Postal Code')) ?></label><div class="control"><input type="text" id="postcode" name="postcode" class="input-text b2c-field"/></div></div>
+    </div>
+</div>
+
+<!-- B2B SECTION -->
+<div id="b2b-section" class="einvoicing-section b2b-only" style="display:none">
+    <h2 class="einvoicing-section-title"><?= $block->escapeHtml(__('Billing Information')) ?></h2>
+    <p><em><?= $block->escapeHtml(__('Required fields are marked with an asterisk *')) ?></em></p>
+
+    <fieldset class="einvoicing-fieldset">
+        <legend><?= $block->escapeHtml(__('Organization Details')) ?></legend>
+        <div class="fields group group-2">
+            <div class="field required"><label class="label" for="invoice_recipient_firstname"><span><?= $block->escapeHtml(__('Invoice Recipient First Name')) ?></span></label><div class="control"><input type="text" id="invoice_recipient_firstname" name="invoice_recipient_firstname" class="input-text" value="<?= $block->escapeHtmlAttr($block->getQuoteField('invoice_recipient_firstname')) ?>" required/></div></div>
+            <div class="field required"><label class="label" for="invoice_recipient_lastname"><span><?= $block->escapeHtml(__('Invoice Recipient Last Name')) ?></span></label><div class="control"><input type="text" id="invoice_recipient_lastname" name="invoice_recipient_lastname" class="input-text" value="<?= $block->escapeHtmlAttr($block->getQuoteField('invoice_recipient_lastname')) ?>" required/></div></div>
+        </div>
+        <div class="field required"><label class="label" for="invoice_email"><span><?= $block->escapeHtml(__('Invoice Email')) ?></span></label><div class="control"><input type="email" id="invoice_email" name="invoice_email" class="input-text" value="<?= $block->escapeHtmlAttr($block->getQuoteField('invoice_email')) ?>" required/></div></div>
+        <div class="field required"><label class="label" for="company_full_legal_name"><span><?= $block->escapeHtml(__('Company Full Legal Name')) ?></span></label><div class="control"><input type="text" id="company_full_legal_name" name="company_full_legal_name" class="input-text" required/></div></div>
+        <div class="field"><label class="label" for="commercial_company_name"><?= $block->escapeHtml(__('Commercial Company Name')) ?></label><div class="control"><input type="text" id="commercial_company_name" name="commercial_company_name" class="input-text"/></div></div>
+        <div class="fields group group-2">
+            <div class="field required"><label class="label" for="organisation_type"><span><?= $block->escapeHtml(__('Organization Type')) ?></span></label><div class="control"><select id="organisation_type" name="organisation_type" class="select" required><?php foreach ($block->getOrganisationTypeOptions() as $opt): ?><option value="<?= $block->escapeHtmlAttr($opt['value']) ?>"><?= $block->escapeHtml($opt['label']) ?></option><?php endforeach; ?></select></div></div>
+            <div class="field required"><label class="label" for="sector_of_activity"><span><?= $block->escapeHtml(__('Sector of Activity')) ?></span></label><div class="control"><select id="sector_of_activity" name="sector_of_activity" class="select" required><?php foreach ($block->getSectorOptions() as $opt): ?><option value="<?= $block->escapeHtmlAttr($opt['value']) ?>"><?= $block->escapeHtml($opt['label']) ?></option><?php endforeach; ?></select></div></div>
+        </div>
+    </fieldset>
+
+    <fieldset class="einvoicing-fieldset">
+        <legend><?= $block->escapeHtml(__('Postal Address')) ?></legend>
+        <div class="field required"><label class="label" for="company_street"><span><?= $block->escapeHtml(__('Company Street')) ?></span></label><div class="control"><input type="text" id="company_street" name="company_street" class="input-text" required/></div></div>
+        <div class="field"><label class="label" for="company_street2"><?= $block->escapeHtml(__('Company Street 2')) ?></label><div class="control"><input type="text" id="company_street2" name="company_street2" class="input-text"/></div></div>
+        <div class="field required"><label class="label" for="company_city"><span><?= $block->escapeHtml(__('Company City')) ?></span></label><div class="control"><input type="text" id="company_city" name="company_city" class="input-text" required/></div></div>
+        <div class="fields group group-2">
+            <div class="field"><label class="label" for="company_state"><?= $block->escapeHtml(__('Company State / Province')) ?></label><div class="control"><select id="company_state" name="company_state" class="select"><option value=""><?= $block->escapeHtml(__('Select an Option')) ?></option></select></div></div>
+            <div class="field"><label class="label" for="company_postcode"><?= $block->escapeHtml(__('Company Zip/Postal Code')) ?></label><div class="control"><input type="text" id="company_postcode" name="company_postcode" class="input-text"/></div></div>
+        </div>
+    </fieldset>
+
+    <fieldset class="einvoicing-fieldset">
+        <legend><?= $block->escapeHtml(__('Tax & Business Information')) ?></legend>
+        <div class="field"><label class="label" for="business_registration_type"><?= $block->escapeHtml(__('Business Registration Type')) ?></label><div class="control"><select id="business_registration_type" name="business_registration_type" class="select"><option value="siret">SIRET</option><option value="vat">VAT</option></select></div></div>
+        <div class="field required" id="field-siret">
+            <label class="label" for="siret"><span><?= $block->escapeHtml(__('SIRET')) ?></span></label>
+            <div class="control">
+                <input type="text" id="siret" name="siret" class="input-text" maxlength="14" pattern="\d{14}" placeholder="<?= $block->escapeHtmlAttr(__('14-digit SIRET')) ?>"/>
+                <button type="button" id="btn-verify-siret" class="action secondary"><?= $block->escapeHtml(__('Verify')) ?></button>
+            </div>
+            <div id="siret-feedback" class="einvoicing-feedback"></div>
+        </div>
+        <div class="field" id="field-siren"><label class="label" for="siren"><?= $block->escapeHtml(__('SIREN Number')) ?></label><div class="control"><input type="text" id="siren" name="siren" class="input-text" readonly placeholder="<?= $block->escapeHtmlAttr(__('Auto-extracted from SIRET')) ?>"/></div></div>
+        <div class="field" id="field-vat">
+            <label class="label" for="vat_intracommunity_number"><span>*</span> <?= $block->escapeHtml(__('VAT Intracommunity Number')) ?></label>
+            <div class="control">
+                <input type="text" id="vat_intracommunity_number" name="vat_intracommunity_number" class="input-text" placeholder="e.g. DE123456789"/>
+                <button type="button" id="btn-verify-vat" class="action secondary"><?= $block->escapeHtml(__('Verify')) ?></button>
+            </div>
+            <div id="vat-feedback" class="einvoicing-feedback"></div>
+        </div>
+        <div class="field"><label class="label" for="certificate_id"><?= $block->escapeHtml(__('Certificate ID')) ?></label><div class="control"><input type="text" id="certificate_id" name="certificate_id" class="input-text"/></div></div>
+        <div class="field"><label class="label" for="duns_number"><?= $block->escapeHtml(__('D-U-N-S Number')) ?></label><div class="control"><input type="text" id="duns_number" name="duns_number" class="input-text"/></div></div>
+        <div class="field"><label class="label" for="po_number"><?= $block->escapeHtml(__('PO Number')) ?></label><div class="control"><input type="text" id="po_number" name="po_number" class="input-text"/></div></div>
+        <div class="field"><label class="label" for="routing_address"><?= $block->escapeHtml(__('Routing Address')) ?></label><div class="control"><input type="text" id="routing_address" name="routing_address" class="input-text"/></div></div>
+    </fieldset>
+</div>
+
+<!-- FOOTER -->
+<div class="einvoicing-form-footer">
+    <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back"><?= $block->escapeHtml(__('Back')) ?></a>
+    <div class="einvoicing-footer-actions">
+        <button type="button" id="btn-save-billing" class="action secondary"><?= $block->escapeHtml(__('Save')) ?></button>
+        <button type="button" id="btn-proceed" class="action primary"><?= $block->escapeHtml(__('Proceed to payment')) ?></button>
+    </div>
+</div>
+<div id="einvoicing-messages" class="einvoicing-messages" style="display:none"></div>
+</form>
+</div>
+
+<script>
+require(['jquery'], function ($) {
+    'use strict';
+    var SAVE_URL   = '<?= $block->escapeUrl($block->getSaveUrl()) ?>';
+    var VERIFY_URL = '<?= $block->escapeUrl($block->getVerifyUrl()) ?>';
+    var CHECKOUT_URL = '<?= $block->escapeUrl($block->getCheckoutUrl()) ?>';
+
+    function applyProfile() {
+        var profile = $('#financing_profile').val();
+        var isB2B = profile === 'sponsored';
+        $('#b2c-section').toggle(!isB2B);
+        $('#b2b-section, .b2b-only').toggle(isB2B);
+        if (isB2B) applyCountryFields($('#country_of_residence').val());
+    }
+
+    function applyCountryFields(country) {
+        var isFrance = country === 'FR';
+        $('#field-siret, #field-siren').toggle(isFrance);
+        $('#field-vat').toggle(!isFrance);
+        $('#siret').prop('required', isFrance);
+        $('#vat_intracommunity_number').prop('required', !isFrance);
+    }
+
+    $('#siret').on('input', function () {
+        var val = $(this).val().replace(/\D/g,'').substring(0,14);
+        $(this).val(val);
+        $('#siren').val(val.length >= 9 ? val.substring(0,9) : '');
+    });
+
+    function ajaxVerify(data, $feedback, $btn, originalText) {
+        data.isAjax = 1;
+        $btn.prop('disabled', true).text('Verifying...');
+        $feedback.hide();
+        $.post(VERIFY_URL, data, function (r) {
+            $feedback.removeClass('success error').addClass(r.success ? 'success' : 'error').text(r.message).show();
+            if (r.success && r.company_name) $('#company_full_legal_name').val(r.company_name);
+            if (r.success && r.siren) $('#siren').val(r.siren);
+        }, 'json').always(function () { $btn.prop('disabled', false).text(originalText); });
+    }
+
+    $('#btn-verify-siret').on('click', function () {
+        ajaxVerify({siret: $('#siret').val(), country: $('#country_of_residence').val()}, $('#siret-feedback'), $(this), 'Verify');
+    });
+    $('#btn-verify-vat').on('click', function () {
+        ajaxVerify({vat_number: $('#vat_intracommunity_number').val(), country: $('#country_of_residence').val()}, $('#vat-feedback'), $(this), 'Verify');
+    });
+
+    function submitForm(proceed) {
+        $('#btn-save-billing, #btn-proceed').prop('disabled', true);
+        $('#einvoicing-messages').hide();
+        var data = $('#einvoicing-billing-form').serializeArray();
+        data.push({name:'isAjax',value:'1'});
+        $.post(SAVE_URL, data, function (r) {
+            if (r.success && proceed) { window.location.href = CHECKOUT_URL; }
+            else if (r.success) { $('#einvoicing-messages').removeClass('error').addClass('success').text(r.message).show(); }
+            else { $('#einvoicing-messages').removeClass('success').addClass('error').text(r.message).show(); }
+        }, 'json').always(function () { $('#btn-save-billing, #btn-proceed').prop('disabled', false); });
+    }
+
+    $('#btn-save-billing').on('click', function () { submitForm(false); });
+    $('#btn-proceed').on('click', function () { submitForm(true); });
+    $('#financing_profile').on('change', applyProfile);
+    $('#country_of_residence').on('change', function () { applyCountryFields($(this).val()); });
+    applyProfile();
+});
+</script>

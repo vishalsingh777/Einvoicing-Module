@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="einvoicing_company" resource="default" engine="innodb"
+           comment="Inseead Einvoicing - Verified Company Entities">
+        <column xsi:type="int" name="company_id" unsigned="true" nullable="false" identity="true" comment="Company ID"/>
+        <column xsi:type="varchar" name="company_name" nullable="false" length="255" comment="Company Full Legal Name"/>
+        <column xsi:type="varchar" name="commercial_name" nullable="true" length="255" comment="Commercial Name"/>
+        <column xsi:type="varchar" name="vat_number" nullable="true" length="50" comment="VAT Intracommunity Number"/>
+        <column xsi:type="varchar" name="siren" nullable="true" length="9" comment="SIREN (France)"/>
+        <column xsi:type="varchar" name="siret" nullable="true" length="14" comment="SIRET (France)"/>
+        <column xsi:type="varchar" name="apen_number" nullable="true" length="10" comment="APEN/NAF Code"/>
+        <column xsi:type="varchar" name="country" nullable="false" length="2" comment="ISO2 Country Code"/>
+        <column xsi:type="varchar" name="organisation_type" nullable="true" length="100" comment="Organisation Type"/>
+        <column xsi:type="varchar" name="sector_of_activity" nullable="true" length="100" comment="Sector of Activity"/>
+        <column xsi:type="varchar" name="tax_registration_status" nullable="true" length="50" comment="Tax Registration Status"/>
+        <column xsi:type="varchar" name="business_registration_type" nullable="true" length="50" comment="Business Registration Type"/>
+        <column xsi:type="varchar" name="certificate_id" nullable="true" length="100" comment="Certificate ID"/>
+        <column xsi:type="varchar" name="duns_number" nullable="true" length="20" comment="D-U-N-S Number"/>
+        <column xsi:type="varchar" name="verification_status" nullable="false" length="32" default="pending" comment="pending|verified|failed"/>
+        <column xsi:type="timestamp" name="verified_at" nullable="true" comment="Verified At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="company_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="EINVOICING_COMPANY_VAT_COUNTRY">
+            <column name="vat_number"/><column name="country"/>
+        </constraint>
+        <index referenceId="EINVOICING_COMPANY_SIRET" indexType="btree"><column name="siret"/></index>
+    </table>
+
+    <table name="einvoicing_order_snapshot" resource="default" engine="innodb"
+           comment="Inseead Einvoicing - Company Snapshot at Order Level">
+        <column xsi:type="int" name="snapshot_id" unsigned="true" nullable="false" identity="true" comment="Snapshot ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Sales Order ID"/>
+        <column xsi:type="int" name="company_id" unsigned="true" nullable="true" comment="Company ID at order time"/>
+        <column xsi:type="varchar" name="financing_profile" nullable="true" length="32" comment="self_funded|sponsored"/>
+        <column xsi:type="varchar" name="company_name" nullable="true" length="255" comment="Snapshot: Company Name"/>
+        <column xsi:type="varchar" name="commercial_name" nullable="true" length="255" comment="Snapshot: Commercial Name"/>
+        <column xsi:type="varchar" name="vat_number" nullable="true" length="50" comment="Snapshot: VAT Number"/>
+        <column xsi:type="varchar" name="siren" nullable="true" length="9" comment="Snapshot: SIREN"/>
+        <column xsi:type="varchar" name="siret" nullable="true" length="14" comment="Snapshot: SIRET"/>
+        <column xsi:type="varchar" name="company_country" nullable="true" length="2" comment="Snapshot: Country"/>
+        <column xsi:type="varchar" name="organisation_type" nullable="true" length="100" comment="Snapshot: Org Type"/>
+        <column xsi:type="varchar" name="tax_registration_status" nullable="true" length="50" comment="Snapshot: Tax Status"/>
+        <column xsi:type="varchar" name="verification_status" nullable="true" length="32" comment="Snapshot: Verification Status"/>
+        <column xsi:type="varchar" name="invoice_recipient_firstname" nullable="true" length="100" comment="Invoice Recipient First Name"/>
+        <column xsi:type="varchar" name="invoice_recipient_lastname" nullable="true" length="100" comment="Invoice Recipient Last Name"/>
+        <column xsi:type="varchar" name="invoice_email" nullable="true" length="255" comment="Invoice Email"/>
+        <column xsi:type="varchar" name="po_number" nullable="true" length="100" comment="PO Number"/>
+        <column xsi:type="varchar" name="routing_address" nullable="true" length="255" comment="Routing Address"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="snapshot_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="EINVOICING_ORDER_SNAPSHOT_ORDER_ID"><column name="order_id"/></constraint>
+        <constraint xsi:type="foreign" referenceId="EINVOICING_ORDER_SNAPSHOT_ORDER_ID_FK"
+                    table="einvoicing_order_snapshot" column="order_id"
+                    referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="einvoicing_invoice_snapshot" resource="default" engine="innodb"
+           comment="Inseead Einvoicing - Company Snapshot at Invoice Level">
+        <column xsi:type="int" name="snapshot_id" unsigned="true" nullable="false" identity="true" comment="Snapshot ID"/>
+        <column xsi:type="int" name="invoice_id" unsigned="true" nullable="false" comment="Sales Invoice ID"/>
+        <column xsi:type="int" name="order_snapshot_id" unsigned="true" nullable="true" comment="Order Snapshot ID"/>
+        <column xsi:type="varchar" name="company_name" nullable="true" length="255" comment="Snapshot: Company Name"/>
+        <column xsi:type="varchar" name="vat_number" nullable="true" length="50" comment="Snapshot: VAT Number"/>
+        <column xsi:type="varchar" name="siret" nullable="true" length="14" comment="Snapshot: SIRET"/>
+        <column xsi:type="varchar" name="financing_profile" nullable="true" length="32" comment="Financing Profile"/>
+        <column xsi:type="varchar" name="invoice_recipient_firstname" nullable="true" length="100" comment="Invoice Recipient First Name"/>
+        <column xsi:type="varchar" name="invoice_recipient_lastname" nullable="true" length="100" comment="Invoice Recipient Last Name"/>
+        <column xsi:type="varchar" name="invoice_email" nullable="true" length="255" comment="Invoice Email"/>
+        <column xsi:type="varchar" name="po_number" nullable="true" length="100" comment="PO Number"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY"><column name="snapshot_id"/></constraint>
+        <constraint xsi:type="unique" referenceId="EINVOICING_INVOICE_SNAPSHOT_INVOICE_ID"><column name="invoice_id"/></constraint>
+        <constraint xsi:type="foreign" referenceId="EINVOICING_INVOICE_SNAPSHOT_INVOICE_ID_FK"
+                    table="einvoicing_invoice_snapshot" column="invoice_id"
+                    referenceTable="sales_invoice" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="EINVOICING_INVOICE_SNAPSHOT_ORDER_SNAPSHOT_ID_FK"
+                    table="einvoicing_invoice_snapshot" column="order_snapshot_id"
+                    referenceTable="einvoicing_order_snapshot" referenceColumn="snapshot_id" onDelete="SET NULL"/>
+    </table>
+
+    <table name="customer_entity" resource="default">
+        <column xsi:type="int" name="einv_company_id" unsigned="true" nullable="true" comment="Inseead Einvoicing: Company ID"/>
+        <constraint xsi:type="foreign" referenceId="CUSTOMER_ENTITY_EINV_COMPANY_ID_FK"
+                    table="customer_entity" column="einv_company_id"
+                    referenceTable="einvoicing_company" referenceColumn="company_id" onDelete="SET NULL"/>
+    </table>
+
+    <table name="quote" resource="checkout">
+        <column xsi:type="varchar" name="einv_financing_profile" nullable="true" length="32" comment="Inseead: self_funded|sponsored"/>
+        <column xsi:type="varchar" name="einv_verification_status" nullable="true" length="32" comment="Inseead: pending|verified|failed"/>
+        <column xsi:type="int" name="einv_company_id" unsigned="true" nullable="true" comment="Inseead: Company ID"/>
+        <column xsi:type="varchar" name="einv_tax_registration_status" nullable="true" length="50" comment="Inseead: Tax Status"/>
+        <column xsi:type="varchar" name="einv_invoice_recipient_firstname" nullable="true" length="100" comment="Inseead: Invoice First Name"/>
+        <column xsi:type="varchar" name="einv_invoice_recipient_lastname" nullable="true" length="100" comment="Inseead: Invoice Last Name"/>
+        <column xsi:type="varchar" name="einv_invoice_email" nullable="true" length="255" comment="Inseead: Invoice Email"/>
+        <column xsi:type="varchar" name="einv_po_number" nullable="true" length="100" comment="Inseead: PO Number"/>
+        <column xsi:type="varchar" name="einv_routing_address" nullable="true" length="255" comment="Inseead: Routing Address"/>
+    </table>
+
+    <table name="sales_order" resource="sales">
+        <column xsi:type="varchar" name="einv_financing_profile" nullable="true" length="32" comment="Inseead: Financing Profile"/>
+        <column xsi:type="varchar" name="einv_verification_status" nullable="true" length="32" comment="Inseead: Verification Status"/>
+        <column xsi:type="int" name="einv_company_id" unsigned="true" nullable="true" comment="Inseead: Company ID"/>
+    </table>
+</schema>

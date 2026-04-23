@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Inseead\Einvoicing\Api\CompanyRepositoryInterface"
+                type="Inseead\Einvoicing\Model\CompanyRepository"/>
+    <preference for="Inseead\Einvoicing\Api\BillingInformationManagementInterface"
+                type="Inseead\Einvoicing\Model\BillingInformationManagement"/>
+    <preference for="Inseead\Einvoicing\Api\Data\CompanyInterface"
+                type="Inseead\Einvoicing\Model\Company"/>
+    <preference for="Inseead\Einvoicing\Api\Data\BillingInformationInterface"
+                type="Inseead\Einvoicing\Model\BillingInformation"/>
+    <preference for="Inseead\Einvoicing\Api\Data\OrderSnapshotInterface"
+                type="Inseead\Einvoicing\Model\OrderSnapshot"/>
+    <preference for="Inseead\Einvoicing\Api\Data\InvoiceSnapshotInterface"
+                type="Inseead\Einvoicing\Model\InvoiceSnapshot"/>
+
+    <type name="Inseead\Einvoicing\Model\Verification\VerifierPool">
+        <arguments>
+            <argument name="verifiers" xsi:type="array">
+                <item name="insee" xsi:type="object">Inseead\Einvoicing\Model\Verification\InseeVerifier</item>
+                <item name="eu_vat" xsi:type="object">Inseead\Einvoicing\Model\Verification\VatVerifier</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Checkout\Controller\Index\Index">
+        <plugin name="einvoicing_checkout_gate"
+                type="Inseead\Einvoicing\Plugin\CheckoutIndexPlugin" sortOrder="10"/>
+    </type>
+
+    <type name="Ewave\InseadIntegration\Controller\Quote\Populate">
+        <plugin name="einvoicing_populate_gate"
+                type="Inseead\Einvoicing\Plugin\PopulateControllerPlugin" sortOrder="10"/>
+    </type>
+
+    <type name="Magento\Quote\Model\QuoteManagement">
+        <plugin name="einvoicing_order_validation"
+                type="Inseead\Einvoicing\Plugin\OrderValidationPlugin" sortOrder="10"/>
+    </type>
+
+    <virtualType name="Inseead\Einvoicing\Model\ResourceModel\Company\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">einvoicing_company</argument>
+            <argument name="resourceModel" xsi:type="string">Inseead\Einvoicing\Model\ResourceModel\Company</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="einvoicing_company_listing_data_source"
+                      xsi:type="string">Inseead\Einvoicing\Model\ResourceModel\Company\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

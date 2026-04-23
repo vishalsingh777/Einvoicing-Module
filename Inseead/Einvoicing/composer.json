@@ -1,0 +1,22 @@
+{
+    "name": "inseead/module-einvoicing",
+    "description": "Pre-checkout billing and company verification for Inseead (B2C/B2B)",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "require": {
+        "php": ">=8.2",
+        "magento/framework": ">=103.0",
+        "magento/module-checkout": "*",
+        "magento/module-customer": "*",
+        "magento/module-quote": "*",
+        "magento/module-sales": "*",
+        "magento/module-tax": "*",
+        "magento/module-store": "*",
+        "magento/module-backend": "*",
+        "magento/module-ui": "*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": { "Inseead\\Einvoicing\\": "" }
+    }
+}
