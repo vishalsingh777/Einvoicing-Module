@@ -6,7 +6,8 @@
         "proprietary"
     ],
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "magento/framework": "^103.0"
     },
     "autoload": {
         "files": [
