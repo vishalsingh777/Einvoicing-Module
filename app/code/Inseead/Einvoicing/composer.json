@@ -1,0 +1,20 @@
+{
+    "name": "inseead/module-einvoicing",
+    "description": "Inseead Einvoicing Magento 2 module",
+    "type": "magento2-module",
+    "license": [
+        "proprietary"
+    ],
+    "require": {
+        "php": "^8.2",
+        "magento/framework": "^103.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Inseead\\Einvoicing\\": ""
+        }
+    }
+}
